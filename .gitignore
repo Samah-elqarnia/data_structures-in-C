@@ -1,0 +1,37 @@
+# Fichiers objets
+*.o
+*.ko
+*.obj
+*.elf
+
+# Fichiers d'en-tête précompilés
+*.gch
+*.pch
+
+# Bibliothèques compilées
+*.lib
+*.a
+*.la
+*.lo
+*.def
+
+# Fichiers exécutables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Dossiers d'IDE ou éditeurs
+.vscode/
+.vs/
+.idea/
+*.swp
+*.swo
+*~
+*.bak
+
+# Fichiers générés par les tests
+tests/*.exe
+tests/*.o
