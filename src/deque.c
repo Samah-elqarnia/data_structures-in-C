@@ -20,96 +20,95 @@ Node* create_node(int data){
     }
 }
 
-void insertFirst(Deque* D, int data) {
-    Node* NE = create_node(data);
-    if (D->debut == NULL) {
-        D->debut = D->fin = NE;
-    } else {
-        NE->next = D->debut;
-        D->debut->prev = NE;
-        D->debut = NE;
-    }
-    D->taille++;
+void initialiser_deque(Deque* D){
+    D->debut = NULL;
+    D->fin = NULL;
+    D->taille = 0;
 }
 
-void insertLast(Deque* D, int data) {
-    Node* NE = create_node(data);
-    if (D->fin == NULL) {
-        D->debut = D->fin = NE;
-    } else {
-        D->fin->next = NE;
-        NE->prev = D->fin;
-        D->fin = NE;
+void insertFirst(Deque* D, int data){
+    Node *NE;
+    NE= create_node(data);
+    if(D->debut==NULL){
+        D->debut=NE;
+        D->fin=NE;
+        D->taille++;
     }
-    D->taille++;
+    else{
+        NE->next=D->debut;
+        D->debut->prev=NE;
+        NE->prev=NULL;
+        D->debut=NE;
+        D->taille++;
+    }    
 }
 
-void deleteFirst(Deque* D) {
-    if (D->debut == NULL) {
-        printf("Deque vide\n");
+void insertLast(Deque* D, int data){
+    Node *NE;
+ NE= create_node(data);
+ if(D->debut==NULL){
+    D->debut=NE;
+    D->fin=NE;
+    D->taille++;
+ }
+ else{
+    D->fin->next=NE;
+    NE->prev=D->fin;
+    D->fin=NE;
+    D->taille++;
+ }
+}
+void deleteFirst(Deque* D){
+    if(D->debut==NULL){
+        print('deque vide');
         return;
     }
-    Node* temp = D->debut;
-    D->debut = D->debut->next;
-    if (D->debut == NULL) {
-        D->fin = NULL;
-    } else {
-        D->debut->prev = NULL;
-    }
-    free(temp);
+    Node *elem_supp=D->debut;
+    D->debut=D->debut->next;
+    D->debut->prev=NULL;
+    free(elem_supp);
     D->taille--;
 }
-
-void deleteLast(Deque* D) {
-    if (D->fin == NULL) {
-        printf("Deque vide\n");
+void deleteLast(Deque* D){
+   if(D->debut==NULL){
+        print('deque vide');
         return;
     }
-    Node* temp = D->fin;
-    D->fin = D->fin->prev;
-    if (D->fin == NULL) {
-        D->debut = NULL;
-    } else {
-        D->fin->next = NULL;
-    }
-    free(temp);
+    Node *elem_supp=D->fin;
+    D->fin=D->fin->prev;
+    D->fin->next=NULL;
+    free(elem_supp);
     D->taille--;
 }
-
-void getFirst(Deque* D) {
-    if (D->debut != NULL) {
-        printf("Premier element: %d\n", D->debut->data);
-    } else {
-        printf("Deque vide\n");
+void getFirst(Deque* D){
+    if(D->debut==NULL){
+        print('deque vide');
+        return;
     }
+    printf("%d\n", D->debut->data);
 }
-
-void getLast(Deque* D) {
-    if (D->fin != NULL) {
-        printf("Dernier element: %d\n", D->fin->data);
-    } else {
-        printf("Deque vide\n");
+void getLast(Deque* D){
+    if(D->debut==NULL){
+        print('deque vide');
+        return;
     }
+    printf("%d\n", D->fin->data);
 }
-
-void isEmpty(Deque* D) {
-    if (D->taille == 0) {
-        printf("La file est vide\n");
-    } else {
-        printf("La file n'est pas vide\n");
+void isEmpty(Deque* D){
+    if(D->taille==0){
+        printf('deque vide');
+        return;
     }
+    printf('deque non vide');
 }
-
-void size(Deque* D) {
-    printf("Taille de la file: %d\n", D->taille);
+void size(Deque* D){
+    printf("%d\n", D->taille);
 }
-
-void print_deque(Deque* D) {
-    Node* temp = D->debut;
-    printf("Deque: [ ");
-    while (temp != NULL) {
-        printf("%d ", temp->data);
-        temp = temp->next;
+void print_deque(Deque* D){
+    Node *courant=D->debut;
+    while(courant!=NULL){
+        printf("%d -> ", courant->data);
+        courant=courant->next;
     }
-    printf("]\n");
+    printf("NULL\n");
 }
