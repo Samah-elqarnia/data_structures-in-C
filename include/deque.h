@@ -14,6 +14,7 @@ typedef struct {
 } Deque;
 
 Node* create_node(int data);
+void initialiser_deque(Deque* D);
 void insertFirst(Deque* D, int data);
 void insertLast(Deque* D, int data);
 void deleteFirst(Deque* D);

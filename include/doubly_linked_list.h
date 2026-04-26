@@ -15,4 +15,4 @@ void insert(Node** L, int data, int pos);
 void delete(Node** L, int pos);
 void print_list(Node* L);
 
-#endif // LINKED_LIST_H
+#endif
