@@ -1,11 +1,9 @@
 #include "../include/bst.h"
-#include "../include/queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 BSTNode* create_bst_node(int data){
-    BSTNode *NE;
-    NE=(BSTNode*)malloc(sizeof(BSTNode));
+    BSTNode *NE = (BSTNode*)malloc(sizeof(BSTNode));
     if(NE==NULL){
         printf("memoire insuffisante\n");
         exit(-1);
@@ -22,26 +20,25 @@ void initialiser_bst(BST* B){
 }
 
 void insert_bst(BST* B, int data){
-    BSTNode *NE,*temp;
-    NE=create_bst_node(data);
+    BSTNode *NE = create_bst_node(data);
     if(B->root==NULL){
         B->root=NE;
         B->taille++;
+        return;
     }
-    temp=B->root;
+    BSTNode *temp=B->root;
     while(1){
-        if(NE->data>temp->data){
+        if(data > temp->data){
             if(temp->right==NULL){
                 temp->right=NE;
-                B->taille ++;
+                B->taille++;
                 break;
             }
             else{
                 temp=temp->right;
             }
-
         }
-        if(NE->data<temp->data){
+        else if(data < temp->data){
             if(temp->left==NULL){
                 temp->left=NE;
                 B->taille++;
@@ -51,88 +48,150 @@ void insert_bst(BST* B, int data){
                 temp=temp->left;
             }
         }
+        else {
+            free(NE); // element already exists, avoid duplicates
+            break;
+        }
     }
 }
 
 void print_by_level(BST* B){
-    Queue *q;
-    initialiser_queue(q);
-    BSTNode *temp;
-    temp=B->root;
-    while(temp!=NULL){
-        if(temp->left!=NULL){
-            enqueue(q,temp->left);
-        }
-        if(temp->right!=NULL){
-            enqueue(q,temp->right);
-        }
-        printf("%d",temp->data);
-        temp=dequeue(q);
+    if (B->root == NULL) return;
+    int size = (B->taille > 0) ? B->taille : 100;
+    BSTNode** queue = (BSTNode**)malloc(size * sizeof(BSTNode*));
+    int front = 0, rear = 0;
+    
+    queue[rear++] = B->root;
+    while(front < rear) {
+        BSTNode* temp = queue[front++];
+        printf("%d ", temp->data);
+        if (temp->left != NULL) queue[rear++] = temp->left;
+        if (temp->right != NULL) queue[rear++] = temp->right;
     }
+    printf("\n");
+    free(queue);
 }
 
 int search_bst(BST* B, int data){
-    while(B->root!=NULL && data != B->root->data){
-        if(data < B->root->data){
-            B->root= B->root->left;
+    BSTNode *temp = B->root;
+    while(temp!=NULL && data != temp->data){
+        if(data < temp->data){
+            temp = temp->left;
         }
         else{
-            B->root= B->root->right;
+            temp = temp->right;
         }
     }
-    if(root==NULL){
+    if(temp==NULL){
         return 0;
     }
     else{
         return 1;
     }
 }
-void prefixe_traversal(BST* B){
-    if(B->root!=NULL){
-        printf("%d",B->root->data);
-        prefixe_traversal(B->root->left);
-        prefixe_traversal(B->root->right);
-    }
-}
-void suffixe_traversal(BST* B){
-    if(B->root!=NULL){
-        suffixe_traversal(B->root->left);
-        suffixe_traversal(B->root->right);
-        printf("%d",B->root->data);
-    }
-}
-void infixe_traversal(BST* B){
-    if(B->root!=NULL){
-        infixe_traversal(B->root->left);
-        printf("%d",B->root->data);
-        infixe_traversal(B->root->right);
+
+void prefixe_node(BSTNode* node) {
+    if(node!=NULL){
+        printf("%d ",node->data);
+        prefixe_node(node->left);
+        prefixe_node(node->right);
     }
 }
 
-BSTNode* min_bst(BST* B){
- BSTNode *temp;
- if(B->root ==NULL){
-    printf("arbre vide\n");
-    return NULL;
- }
- temp=B->root;
- while(temp->left!=NULL){
-    temp=temp->left;
- }
- return temp;
+void prefixe_traversal(BST* B){
+    prefixe_node(B->root);
+    printf("\n");
 }
-BSTNode* max_bst(BST* B){
-    BSTNode *temp;
-    if(B->root ==NULL){
+
+void suffixe_node(BSTNode* node) {
+    if(node!=NULL){
+        suffixe_node(node->left);
+        suffixe_node(node->right);
+        printf("%d ",node->data);
+    }
+}
+
+void suffixe_traversal(BST* B){
+    suffixe_node(B->root);
+    printf("\n");
+}
+
+void infixe_node(BSTNode* node) {
+    if(node!=NULL){
+        infixe_node(node->left);
+        printf("%d ",node->data);
+        infixe_node(node->right);
+    }
+}
+
+void infixe_traversal(BST* B){
+    infixe_node(B->root);
+    printf("\n");
+}
+
+BSTNode* min_bst(BST* B){
+    if(B->root == NULL){
         printf("arbre vide\n");
         return NULL;
     }
-    temp=B->root;
+    BSTNode *temp = B->root;
+    while(temp->left!=NULL){
+        temp=temp->left;
+    }
+    return temp;
+}
+
+BSTNode* max_bst(BST* B){
+    if(B->root == NULL){
+        printf("arbre vide\n");
+        return NULL;
+    }
+    BSTNode *temp = B->root;
     while(temp->right!=NULL){
         temp=temp->right;
     }
     return temp;
 }
-BSTNode* delete_bst(BST* B, int data){
-    
+
+BSTNode* min_bst_node(BSTNode* root) {
+    if (root == NULL) return NULL;
+    while(root->left != NULL) root = root->left;
+    return root;
+}
+
+BSTNode* delete_node(BSTNode* root, int data) {
+    if (root == NULL) return NULL;
+    if (data < root->data) {
+        root->left = delete_node(root->left, data);
+    } else if (data > root->data) {
+        root->right = delete_node(root->right, data);
+    } else {
+        if (root->left == NULL && root->right == NULL) {
+            free(root);
+            return NULL;
+        } else if (root->left == NULL) {
+            BSTNode* temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            BSTNode* temp = root->left;
+            free(root);
+            return temp;
+        } else {
+            BSTNode* temp = min_bst_node(root->right);
+            root->data = temp->data;
+            root->right = delete_node(root->right, temp->data);
+        }
+    }
+    return root;
+}
+
+BSTNode* delete_bst(BST* B, int data) {
+    if (B->root == NULL) return NULL;
+    int found = search_bst(B, data);
+    if (found) {
+        B->root = delete_node(B->root, data);
+        B->taille--;
+    }
+    return B->root;
 }
